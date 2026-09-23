@@ -1,0 +1,13 @@
+LICENSE
+MANIFEST.txt
+README.md
+SECURITY.md
+Gemfile
+sendrepute-rails.gemspec
+lib/sendrepute-rails.rb
+lib/sendrepute/rails.rb
+lib/sendrepute/rails/client.rb
+lib/sendrepute/rails/configuration.rb
+lib/sendrepute/rails/mailer.rb
+lib/sendrepute/rails/message.rb
+lib/sendrepute/rails/version.rb
