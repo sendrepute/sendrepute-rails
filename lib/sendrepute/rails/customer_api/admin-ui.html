@@ -295,10 +295,11 @@ iframe.preview{width:100%;height:420px;border:1px solid hsl(var(--rule));border-
         el("span", { text: "each additional term" }), el("span", { text: rates.additionalTermMillicents + " mc" }),
         el("span", { text: "maximum per classification" }), el("span", { text: rates.maximumClassificationMillicents + " mc" })
       ]) : el("div", { class: "notice", text: "Load current rates first. This exact rate schedule and your ceiling are sent as priceAuthorization; the server refuses the charge if either changed." })) : null;
+      if (o.id === "customerClassifyEmail") wrap.appendChild(el("div", { class: "notice", text: "Manual edit prices are estimates: this API cannot enforce a quoted ceiling. By confirming below you authorize the server rate at processing, which can differ from the estimate." }));
       consentBox = el("div", { class: "consent" }, [
         rateRows || el("span"),
         el("div", { class: "row" }, [el("label", { for: "price", text: isClassify ? "Maximum charge you authorize (millicents)" : "Expected price (millicents)" }), priceInput]),
-        el("label", { class: "check", for: "ack" }, [ack, el("span", { text: "I authorize this single paid operation at the price above. If the price changed the server refuses before debit." })])
+        el("label", { class: "check", for: "ack" }, [ack, el("span", { text: o.id === "customerClassifyEmail" ? "I authorize this edit at the server rate when processed, which may differ from this estimate." : "I authorize this single paid operation at the price above. If the price changed the server refuses before debit." })])
       ]);
       if (quoteOp) consentBox.appendChild(el("div", { class: "actions" }, [el("button", { class: "btn ghost", type: "button", text: "Open quote: " + quoteOp.summary, onclick: function () { select(quoteOp); } })]));
       wrap.appendChild(consentBox);

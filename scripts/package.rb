@@ -12,6 +12,7 @@ FILES = %w[
   lib/sendrepute/rails.rb
   lib/sendrepute/rails/client.rb
   lib/sendrepute/rails/customer_api.rb
+  lib/sendrepute/rails/intent_store.rb
   lib/sendrepute/rails/customer_console.rb
   lib/sendrepute/rails/customer_api/customer-api-operations.json
   lib/sendrepute/rails/customer_api/admin-ui.html
