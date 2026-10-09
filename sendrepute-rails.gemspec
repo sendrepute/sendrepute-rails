@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.homepage = "https://www.sendrepute.com"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.1"
-  spec.files = Dir["lib/**/*.rb", "LICENSE", "MANIFEST.txt", "README.md", "SECURITY.md"]
+  spec.files = Dir["lib/**/*.rb", "lib/sendrepute/rails/customer_api/*.{json,html}", "LICENSE", "MANIFEST.txt", "README.md", "SECURITY.md"]
   spec.require_paths = ["lib"]
 
   spec.add_dependency "actionmailer", ">= 7.1", "< 8.0"

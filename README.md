@@ -1,5 +1,3 @@
-> **Standalone source distribution:** this repository contains the integration runtime, documentation, and source packager. Upstream workspace/CMS/production-normalizer regression suites are deliberately not distributed here because they depend on private server code or isolated platform fixtures. Testing commands and historical verification evidence below describe upstream maintainer validation, not a self-contained test suite in this source-only checkout. No third-party registry publication is implied.
-
 # SendRepute Rails adapter
 
 Version 0.1.0 is a small Action Mailer pre-delivery adapter for Rails 7.1+.
@@ -104,3 +102,53 @@ of untested versions. See `.local/rails-contract.md` for exact evidence.
 Build the deterministic, allowlisted production source archive with
 `ruby scripts/package.rb`. The archive excludes tests, caches, credentials,
 vendor trees, and local configuration.
+
+## Customer API client and operator console
+
+`SendRepute::Rails::CustomerApi::Client.new(api_key: ...)` has a method for each of the 49 customer API operations, for example `client.customerGetAccount`, plus a generic `call(operation_id, input, options)`.
+
+Its safeguards:
+
+- It uses a fixed HTTPS origin through Net::HTTP.
+- It never retries a request, refuses redirects and caps responses.
+- Parameters and body fields must match the contract, and bodies are limited to 512 KiB.
+- Paid operations require `paid_consent: { acknowledged: true, expectedPriceMillicents: N }`.
+- Billing and recovery actions require `confirm: true`.
+
+The opt-in console:
+
+```ruby
+# config/initializers/sendrepute.rb
+require "sendrepute/rails/customer_console"
+SendRepute::Rails::CustomerConsole.configure do |c|
+  c.api_key = Rails.application.credentials.sendrepute_customer_api_key
+  c.authorize = ->(controller) { controller.respond_to?(:current_user) && controller.current_user&.admin? }
+end
+
+# config/routes.rb
+SendRepute::Rails::CustomerConsole.draw(self, path: "admin/sendrepute")
+```
+
+Without an `authorize` proc that returns `true`, every request is refused.
+
+Console safeguards:
+
+- CSRF uses Rails `protect_from_forgery` with the `X-CSRF-Token` header, plus a same-origin `Origin` check.
+- A paid operation needs its quote operation to have run in the same session within the last 15 minutes. That quote is used up by the paid call.
+- Only one paid or billing call can be in flight per session.
+- The API key never reaches the browser.
+
+The Action Mailer interceptor is unchanged.
+
+## Paid-intent ledger (anti-duplicate)
+
+Every paid or billing console call is recorded in a durable intent ledger **before** the request is sent. The identity is the credential fingerprint, operation, method, path and canonical body. An identical request is refused (409 `INTENT_LOCKED` / `INTENT_COMPLETED`) from any session, worker or restart while the intent is pending, ambiguous (timeout, transport error, 5xx, 408/425, malformed response) or completed. Definitive 4xx refusals unlock it. The upstream replay identity (`recoveryId`, or `analysisId`) is generated once, persisted with the intent and reused on resend, so the server can deduplicate. Operators review intents with the **Paid intents** button and release one only with a reason and an explicit confirmation. Releasing a completed intent issues a fresh replay id for a deliberate second charge. Pending intents are never released online or by timeout, because a stalled worker may still have the request in flight. After a worker crash, stop every worker and run `store.recover_pending_after_shutdown(all_workers_stopped: true, now: Time.now.to_i)`; leftover pending intents become ambiguous for reconciliation and release. With no ledger configured, paid and billing operations return 503 `INTENT_STORE_REQUIRED`. The filesystem store supports a **single host only**, and it refuses to start unless you acknowledge that and its directory is absolute, `0700` and owned by the server user. Prices are always sent upstream for server-side enforcement, and a charge above consent is flagged. Classification (`classifyCustomerEmail`, POST /v1/classify) sends `priceAuthorization` with the four effective rates returned by this session's latest GET /v1/pricing plus the operator's ceiling. A confirmation that no longer matches the latest rates is refused (409 `PRICE_CONFIRMATION_STALE`) before anything is sent. The server re-checks rates and ceiling atomically at settlement (409 `PRICE_CHANGED`, no debit). Manual edit reclassification (`customerClassifyEmail`, POST /v1/classify/edit) has no price field in its request schema (`CustomerManualEditInput`, additionalProperties false); the server prices it authoritatively.
+
+```ruby
+SendRepute::Rails::CustomerConsole.configure do |c|
+  c.intent_store = SendRepute::Rails::CustomerApi::FileIntentStore.new(
+    directory: Rails.root.join("storage/sendrepute-intents").to_s, single_host: true) # single host only
+end
+```
+
+Multi-host deployments must supply their own `IntentLedger` subclass backed by shared storage with atomic locks.

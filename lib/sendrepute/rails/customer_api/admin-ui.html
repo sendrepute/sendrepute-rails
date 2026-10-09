@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow">
+<title>SendRepute Customer API Console</title>
+<style nonce="__SR_NONCE__">
+:root{
+  --paper:40 33% 95%;--paper-2:40 28% 91%;--card:42 40% 98%;--ink:222 38% 16%;--ink-2:222 16% 38%;--ink-3:222 10% 56%;
+  --rule:38 18% 82%;--signal:9 72% 47%;--signal-soft:9 80% 94%;--verdigris:170 42% 30%;--verdigris-soft:168 38% 91%;
+  --amber:36 84% 42%;--amber-soft:40 90% 92%;--focus:222 70% 46%;
+  --serif:"Iowan Old Style","Palatino Linotype",Charter,"Book Antiqua",Georgia,serif;
+  --sans:"Avenir Next","Segoe UI Variable","Segoe UI",Seravek,Ubuntu,Cantarell,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono","JetBrains Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100dvh;background:hsl(var(--paper));color:hsl(var(--ink));font:14px/1.5 var(--sans)}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.35;background-image:radial-gradient(hsl(var(--rule)) .6px,transparent .7px);background-size:5px 5px;z-index:0}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid hsl(var(--focus));outline-offset:2px}
+.shell{position:relative;z-index:1;display:grid;grid-template-columns:300px minmax(0,1fr) minmax(0,1.05fr);min-height:100dvh}
+header.mast{grid-column:1/-1;display:flex;align-items:baseline;gap:18px;padding:18px 28px 14px;border-bottom:1px solid hsl(var(--rule));background:hsl(var(--paper))}
+.mast h1{font:600 22px/1 var(--serif);letter-spacing:-.01em;margin:0}
+.mast h1 em{font-style:italic;color:hsl(var(--signal))}
+.mast .meta{font:12px var(--mono);color:hsl(var(--ink-3))}
+.mast .spacer{flex:1}
+.pill{display:inline-flex;align-items:center;gap:6px;font:11px/1 var(--mono);letter-spacing:.04em;text-transform:uppercase;padding:5px 8px;border:1px solid hsl(var(--rule));border-radius:3px;background:hsl(var(--card))}
+.pill.ok{color:hsl(var(--verdigris));border-color:hsl(var(--verdigris)/.35);background:hsl(var(--verdigris-soft))}
+.pill.paid{color:hsl(var(--signal));border-color:hsl(var(--signal)/.35);background:hsl(var(--signal-soft))}
+.pill.fin{color:hsl(var(--amber));border-color:hsl(var(--amber)/.4);background:hsl(var(--amber-soft))}
+nav.rail{border-right:1px solid hsl(var(--rule));overflow:auto;max-height:calc(100dvh - 58px);padding:14px 0 40px}
+.search{margin:0 16px 12px;display:block;width:calc(100% - 32px);padding:8px 10px;border:1px solid hsl(var(--rule));background:hsl(var(--card));border-radius:4px}
+.grp{margin-top:14px}
+.grp h2{font:600 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:hsl(var(--ink-3));margin:0 16px 6px;display:flex;justify-content:space-between}
+.op{display:grid;grid-template-columns:46px 1fr auto;gap:8px;align-items:center;width:100%;text-align:left;border:0;background:none;padding:7px 16px;cursor:pointer;border-left:3px solid transparent;transition:background .12s}
+.op:hover{background:hsl(var(--paper-2))}
+.op[aria-current="true"]{background:hsl(var(--card));border-left-color:hsl(var(--ink))}
+.op .m{font:600 10px/1 var(--mono);letter-spacing:.06em}
+.m.GET{color:hsl(var(--verdigris))}.m.POST{color:hsl(var(--focus))}.m.DELETE{color:hsl(var(--signal))}
+.op .s{font-size:13px;line-height:1.25;overflow:hidden;text-overflow:ellipsis}
+.dot{width:7px;height:7px;border-radius:50%;background:hsl(var(--signal))}
+.dot.fin{background:hsl(var(--amber))}
+main.composer{padding:26px 30px 60px;overflow:auto;max-height:calc(100dvh - 58px);border-right:1px solid hsl(var(--rule))}
+aside.inspector{padding:26px 30px 60px;overflow:auto;max-height:calc(100dvh - 58px);background:hsl(var(--paper-2)/.55)}
+.eyebrow{font:11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:hsl(var(--ink-3))}
+h3.title{font:600 28px/1.1 var(--serif);letter-spacing:-.015em;margin:6px 0 10px}
+.route{font:13px var(--mono);background:hsl(var(--card));border:1px solid hsl(var(--rule));padding:8px 10px;border-radius:4px;display:flex;gap:10px;align-items:center;overflow:auto;white-space:nowrap}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 4px}
+fieldset{border:0;margin:22px 0 0;padding:0}
+legend{font:600 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:hsl(var(--ink-2));margin-bottom:8px;padding:0}
+.row{display:grid;grid-template-columns:150px 1fr;gap:10px;align-items:center;margin-bottom:8px}
+.row label{font:12px var(--mono);color:hsl(var(--ink-2))}
+.row input,.row select{padding:7px 9px;border:1px solid hsl(var(--rule));background:hsl(var(--card));border-radius:4px;width:100%}
+textarea.json{width:100%;min-height:260px;resize:vertical;padding:12px;border:1px solid hsl(var(--rule));background:hsl(var(--card));border-radius:4px;font:12.5px/1.55 var(--mono);tab-size:2}
+.hint{font-size:12px;color:hsl(var(--ink-3));margin-top:6px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);margin-top:22px;border:1px solid hsl(var(--signal)/.35);border-radius:6px;overflow:hidden;background:hsl(var(--card))}
+.step{padding:12px 14px;border-right:1px solid hsl(var(--signal)/.2)}
+.step:last-child{border-right:0}
+.step b{display:block;font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:hsl(var(--signal));margin-bottom:4px}
+.step.done b{color:hsl(var(--verdigris))}
+.step p{margin:0;font-size:12.5px;color:hsl(var(--ink-2))}
+.consent{margin-top:12px;padding:14px;border:1px dashed hsl(var(--signal)/.5);border-radius:6px;background:hsl(var(--signal-soft)/.6)}
+.consent .row{grid-template-columns:200px 1fr}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:13px;margin-top:6px}
+.actions{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+.btn{border:1px solid hsl(var(--ink));background:hsl(var(--ink));color:hsl(var(--paper));padding:9px 16px;border-radius:4px;cursor:pointer;font-weight:600;letter-spacing:.01em;transition:transform .08s,opacity .12s}
+.btn:active{transform:translateY(1px)}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:transparent;color:hsl(var(--ink))}
+.btn.paid{background:hsl(var(--signal));border-color:hsl(var(--signal))}
+.status{display:flex;gap:10px;align-items:center;margin-bottom:14px}
+.code{font:600 26px/1 var(--serif)}
+.code.good{color:hsl(var(--verdigris))}.code.bad{color:hsl(var(--signal))}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font:12px var(--mono);margin:10px 0 16px;color:hsl(var(--ink-2))}
+.tree{font:12.5px/1.6 var(--mono);background:hsl(var(--card));border:1px solid hsl(var(--rule));border-radius:6px;padding:12px 14px;overflow:auto;max-height:56vh}
+.tree details{margin-left:14px}.tree summary{cursor:pointer;margin-left:-14px;list-style:none}
+.tree summary::before{content:"+ ";color:hsl(var(--ink-3))}.tree details[open]>summary::before{content:"- "}
+.k{color:hsl(var(--ink-2))}.str{color:hsl(var(--verdigris))}.num{color:hsl(var(--focus))}.bool{color:hsl(var(--signal))}.nul{color:hsl(var(--ink-3))}
+.leaf{margin-left:14px;word-break:break-word;white-space:pre-wrap}
+.intent{border:1px solid hsl(var(--rule));border-radius:6px;padding:12px 14px;margin:0 0 14px;background:hsl(var(--card))}
+.intent h5{margin:0 0 6px;font-size:13px;letter-spacing:.04em;text-transform:uppercase}
+.intent .kv{margin:6px 0}
+.intent textarea{width:100%;min-height:52px;margin:8px 0 6px;font:inherit}
+.intent-list{display:flex;flex-direction:column;gap:10px}
+iframe.preview{width:100%;height:420px;border:1px solid hsl(var(--rule));border-radius:6px;background:hsl(var(--card));margin-top:14px}
+.empty{border:1px dashed hsl(var(--rule));border-radius:8px;padding:34px 26px;text-align:left;color:hsl(var(--ink-2))}
+.spaced{margin-top:10px}
+.empty h4{font:600 20px/1.2 var(--serif);margin:0 0 8px;color:hsl(var(--ink))}
+.empty ol{margin:10px 0 0;padding-left:18px;font-size:13px}
+.notice{padding:10px 12px;border-radius:4px;font-size:13px;margin-top:14px;border:1px solid hsl(var(--rule));background:hsl(var(--card))}
+.notice.err{border-color:hsl(var(--signal)/.45);background:hsl(var(--signal-soft));color:hsl(var(--signal))}
+.skeleton{height:12px;border-radius:3px;background:hsl(var(--rule));margin:10px 16px;animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.45}}
+.login{position:relative;z-index:1;max-width:420px;margin:12vh auto;padding:30px;background:hsl(var(--card));border:1px solid hsl(var(--rule));border-radius:8px}
+.login h1{font:600 26px/1.1 var(--serif);margin:0 0 6px}
+.login input{width:100%;padding:9px 10px;border:1px solid hsl(var(--rule));border-radius:4px;margin:14px 0}
+.fade{animation:fade .22s ease-out both}@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+[hidden]{display:none!important}
+@media (max-width:1100px){.shell{grid-template-columns:260px 1fr}aside.inspector{grid-column:1/-1;max-height:none}}
+@media (max-width:767px){.shell{grid-template-columns:1fr}nav.rail,main.composer{max-height:none;border-right:0}nav.rail{border-bottom:1px solid hsl(var(--rule));max-height:40vh}.row,.consent .row{grid-template-columns:1fr}.steps{grid-template-columns:1fr}.step{border-right:0;border-bottom:1px solid hsl(var(--signal)/.2)}}
+</style>
+</head>
+<body>
+<div id="sr-config" hidden data-base="__SR_BASE__" data-csrf="__SR_CSRF__" data-login="__SR_LOGIN__" data-product="__SR_PRODUCT__"></div>
+
+<section class="login" id="login" hidden>
+  <div class="eyebrow">Operator sign-in</div>
+  <h1>Customer API console</h1>
+  <p class="hint">Enter the operator token configured for this server. The SendRepute API key never leaves the server.</p>
+  <form id="login-form">
+    <label class="eyebrow" for="op-token">Operator token</label>
+    <input id="op-token" type="password" autocomplete="current-password" required maxlength="512">
+    <button class="btn" type="submit">Open console</button>
+    <div class="notice err" id="login-err" hidden></div>
+  </form>
+</section>
+
+<div class="shell" id="app" hidden>
+  <header class="mast">
+    <h1>SendRepute <em>console</em></h1>
+    <span class="meta" id="product"></span>
+    <span class="spacer"></span>
+    <span class="pill ok" id="count">loading</span>
+    <button class="btn ghost" type="button" id="intents-btn">Paid intents</button>
+    <span class="pill">operator session</span>
+  </header>
+  <nav class="rail" aria-label="Customer API operations">
+    <input class="search" id="search" type="search" placeholder="Filter operations" aria-label="Filter operations">
+    <div id="rail-body"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+  </nav>
+  <main class="composer" id="composer">
+    <div class="empty fade">
+      <h4>Choose an operation from the ledger.</h4>
+      <p>Every call runs through this server with its stored key. Free reads execute immediately; paid work follows three fixed steps.</p>
+      <ol><li>Request a quote or current price.</li><li>Confirm the exact expected price in millicents.</li><li>Run once. Failures are never retried automatically.</li></ol>
+    </div>
+  </main>
+  <aside class="inspector" id="inspector" aria-live="polite">
+    <div class="eyebrow">Result</div>
+    <div class="empty spaced"><h4>Nothing run yet.</h4><p>Responses render here as inert text. HTML output previews in a sandbox without scripts and downloads as a file.</p></div>
+  </aside>
+</div>
+
+<script nonce="__SR_NONCE__">
+(function () {
+  "use strict";
+  var cfg = document.getElementById("sr-config").dataset;
+  var BASE = cfg.base.replace(/\/+$/, "");
+  var CSRF = cfg.csrf;
+  var state = { catalog: [], current: null, quoted: {}, busy: false };
+
+  function el(tag, attrs, kids) {
+    var n = document.createElement(tag);
+    if (attrs) for (var k in attrs) {
+      if (k === "text") n.textContent = attrs[k];
+      else if (k === "class") n.className = attrs[k];
+      else if (k === "style") n.style.cssText = attrs[k];
+      else if (k.slice(0, 2) === "on") n.addEventListener(k.slice(2), attrs[k]);
+      else n.setAttribute(k, attrs[k]);
+    }
+    (kids || []).forEach(function (c) { if (c) n.appendChild(typeof c === "string" ? document.createTextNode(c) : c); });
+    return n;
+  }
+  function clear(n) { while (n.firstChild) n.removeChild(n.firstChild); }
+
+  function api(path, payload) {
+    var init = { method: payload ? "POST" : "GET", credentials: "same-origin", headers: { "Accept": "application/json", "X-CSRF-Token": CSRF, "X-Requested-With": "SendReputeConsole" } };
+    if (payload) { init.headers["Content-Type"] = "application/json"; init.body = JSON.stringify(payload); }
+    return fetch(BASE + path, init).then(function (r) {
+      return r.text().then(function (t) {
+        var data = null; try { data = t ? JSON.parse(t) : null; } catch (e) { data = { error: { code: "NON_JSON", message: "Console endpoint returned non-JSON output." } }; }
+        return { status: r.status, data: data };
+      });
+    });
+  }
+
+  function boot() {
+    api("/catalog").then(function (r) {
+      if (r.status === 401 && cfg.login === "1") { showLogin(); return; }
+      if (r.status !== 200 || !r.data || !Array.isArray(r.data.operations)) { railError(r); return; }
+      if (r.data.csrf) CSRF = r.data.csrf;
+      document.getElementById("login").hidden = true;
+      document.getElementById("app").hidden = false;
+      document.getElementById("product").textContent = (r.data.product || cfg.product) + "  /  API " + (r.data.apiVersion || "");
+      state.catalog = r.data.operations;
+      var enabled = state.catalog.filter(function (o) { return o.enabled; }).length;
+      document.getElementById("count").textContent = enabled + " of " + state.catalog.length + " operations";
+      renderRail("");
+    }).catch(function () { railError({ status: 0 }); });
+  }
+
+  function railError(r) {
+    document.getElementById("app").hidden = false;
+    var body = document.getElementById("rail-body"); clear(body);
+    body.appendChild(el("div", { class: "notice err", style: "margin:0 16px" }, ["Catalog unavailable (HTTP " + r.status + "). ", el("button", { class: "btn ghost", type: "button", text: "Retry", onclick: boot })]));
+  }
+
+  function showLogin() {
+    document.getElementById("app").hidden = true;
+    document.getElementById("login").hidden = false;
+    document.getElementById("op-token").focus();
+  }
+  document.getElementById("login-form").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var err = document.getElementById("login-err"); err.hidden = true;
+    var input = document.getElementById("op-token");
+    api("/session", { token: input.value }).then(function (r) {
+      input.value = "";
+      if (r.status === 200 && r.data && r.data.csrf) { CSRF = r.data.csrf; boot(); }
+      else { err.textContent = (r.data && r.data.error && r.data.error.message) || "Sign-in refused."; err.hidden = false; }
+    });
+  });
+
+  function renderRail(filter) {
+    var body = document.getElementById("rail-body"); clear(body);
+    var groups = {};
+    state.catalog.forEach(function (o) {
+      var hay = (o.summary + " " + o.path + " " + o.id + " " + (o.scope || "")).toLowerCase();
+      if (filter && hay.indexOf(filter) === -1) return;
+      (groups[o.group] = groups[o.group] || []).push(o);
+    });
+    Object.keys(groups).forEach(function (g) {
+      var box = el("div", { class: "grp" }, [el("h2", null, [g, el("span", { text: String(groups[g].length) })])]);
+      groups[g].forEach(function (o) {
+        var b = el("button", { class: "op", type: "button", "aria-current": state.current && state.current.id === o.id ? "true" : "false", title: o.enabled ? o.path : (o.disabledReason || "Disabled"), onclick: function () { select(o); } },
+          [el("span", { class: "m " + o.method, text: o.method }), el("span", { class: "s", text: o.summary }), o.paid ? el("span", { class: "dot", title: "Paid" }) : (o.financial ? el("span", { class: "dot fin", title: "Financial" }) : el("span"))]);
+        if (!o.enabled) b.style.opacity = ".45";
+        box.appendChild(b);
+      });
+      body.appendChild(box);
+    });
+    if (!body.firstChild) body.appendChild(el("p", { class: "hint", style: "margin:0 16px", text: "No operation matches that filter." }));
+  }
+  document.getElementById("search").addEventListener("input", function (e) { renderRail(e.target.value.trim().toLowerCase()); });
+
+  function select(o) {
+    state.current = o;
+    renderRail(document.getElementById("search").value.trim().toLowerCase());
+    var c = document.getElementById("composer"); clear(c);
+    var wrap = el("div", { class: "fade" });
+    wrap.appendChild(el("div", { class: "eyebrow", text: o.group }));
+    wrap.appendChild(el("h3", { class: "title", text: o.summary }));
+    wrap.appendChild(el("div", { class: "route" }, [el("span", { class: "m " + o.method, text: o.method }), el("span", { text: "/api" + o.path })]));
+    var chips = el("div", { class: "chips" });
+    chips.appendChild(el("span", { class: "pill", text: o.scope ? "scope " + o.scope : "bearer key" }));
+    chips.appendChild(el("span", { class: o.paid ? "pill paid" : "pill ok", text: o.paid ? "paid" : "no charge" }));
+    if (o.financial) chips.appendChild(el("span", { class: "pill fin", text: "requires confirmation" }));
+    wrap.appendChild(chips);
+    if (!o.enabled) { wrap.appendChild(el("div", { class: "notice err", text: o.disabledReason || "This operation is disabled on this server." })); c.appendChild(wrap); return; }
+
+    var inputs = {};
+    var pq = o.params || [];
+    if (pq.length) {
+      var fs = el("fieldset", null, [el("legend", { text: "Parameters" })]);
+      pq.forEach(function (p) {
+        var id = "p-" + p.name, field;
+        if (p.enum) { field = el("select", { id: id }); field.appendChild(el("option", { value: "", text: "(default)" })); p.enum.forEach(function (v) { field.appendChild(el("option", { value: v, text: v })); }); }
+        else field = el("input", { id: id, maxlength: String(p.maxLength || 128), placeholder: p.in === "path" ? "required" : "optional", inputmode: p.type === "integer" || p.type === "number" ? "numeric" : "text" });
+        inputs[p.name] = { node: field, def: p };
+        fs.appendChild(el("div", { class: "row" }, [el("label", { for: id, text: p.name + (p.in === "path" ? " *" : "") }), field]));
+      });
+      wrap.appendChild(fs);
+    }
+    var bodyArea = null;
+    if (o.hasBody) {
+      bodyArea = el("textarea", { class: "json", spellcheck: "false", "aria-label": "Request body JSON" });
+      bodyArea.value = JSON.stringify(o.bodyTemplate || {}, null, 2);
+      var fsb = el("fieldset", null, [el("legend", { text: "Request body" }), bodyArea, el("div", { class: "hint", text: "Allowed fields: " + (o.bodyFields || []).join(", ") + (o.handoff ? ". returnOrigin is fixed by server configuration." : "") })]);
+      wrap.appendChild(fsb);
+    }
+
+    var consentBox = null, priceInput = null, ack = null, confirmBox = null;
+    if (o.paid) {
+      var quoted = !!state.quoted[o.quote];
+      var quoteOp = state.catalog.filter(function (x) { return x.id === o.quote; })[0];
+      wrap.appendChild(el("div", { class: "steps" }, [
+        el("div", { class: "step" + (quoted ? " done" : "") }, [el("b", { text: quoted ? "1  Quoted" : "1  Quote" }), el("p", { text: quoteOp ? quoteOp.summary : o.quote })]),
+        el("div", { class: "step" }, [el("b", { text: "2  Consent" }), el("p", { text: "Enter the exact price you accept." })]),
+        el("div", { class: "step" }, [el("b", { text: "3  Run once" }), el("p", { text: "No automatic retries after failure." })])
+      ]));
+      priceInput = el("input", { id: "price", inputmode: "numeric", placeholder: "millicents, e.g. 10000" });
+      if (state.quoted[o.quote] && state.quoted[o.quote].price != null) priceInput.value = String(state.quoted[o.quote].price);
+      ack = el("input", { type: "checkbox", id: "ack" });
+      var isClassify = o.id === "classifyCustomerEmail";
+      var rates = isClassify && state.quoted[o.quote] ? state.quoted[o.quote].pricing : null;
+      if (isClassify) {
+        priceInput.placeholder = "maximum charge, millicents";
+        priceInput.value = rates ? String(rates.maximumClassificationMillicents) : "";
+      }
+      var rateRows = isClassify ? (rates ? el("div", { class: "kv", id: "rates" }, [
+        el("span", { text: "base per classification" }), el("span", { text: rates.classificationBaseMillicents + " mc" }),
+        el("span", { text: "included unique terms" }), el("span", { text: String(rates.includedUniqueTerms) }),
+        el("span", { text: "each additional term" }), el("span", { text: rates.additionalTermMillicents + " mc" }),
+        el("span", { text: "maximum per classification" }), el("span", { text: rates.maximumClassificationMillicents + " mc" })
+      ]) : el("div", { class: "notice", text: "Load current rates first. This exact rate schedule and your ceiling are sent as priceAuthorization; the server refuses the charge if either changed." })) : null;
+      consentBox = el("div", { class: "consent" }, [
+        rateRows || el("span"),
+        el("div", { class: "row" }, [el("label", { for: "price", text: isClassify ? "Maximum charge you authorize (millicents)" : "Expected price (millicents)" }), priceInput]),
+        el("label", { class: "check", for: "ack" }, [ack, el("span", { text: "I authorize this single paid operation at the price above. If the price changed the server refuses before debit." })])
+      ]);
+      if (quoteOp) consentBox.appendChild(el("div", { class: "actions" }, [el("button", { class: "btn ghost", type: "button", text: "Open quote: " + quoteOp.summary, onclick: function () { select(quoteOp); } })]));
+      wrap.appendChild(consentBox);
+    }
+    if (o.financial) {
+      confirmBox = el("input", { type: "checkbox", id: "confirm" });
+      wrap.appendChild(el("div", { class: "consent" }, [el("label", { class: "check", for: "confirm" }, [confirmBox, el("span", { text: o.id === "customerResolvePaidResult" ? "I am resolving this recovery deliberately. This is never triggered by a timeout or generic failure." : "I confirm this billing change for the key owner's account." })])]));
+    }
+    var runBtn = el("button", { class: o.paid ? "btn paid" : "btn", type: "button", text: o.paid ? "Run paid operation" : "Run" });
+    var note = el("div", { class: "notice err", hidden: "hidden" });
+    runBtn.addEventListener("click", function () {
+      if (state.busy) return;
+      note.hidden = true;
+      var payload = { operationId: o.id, params: {}, query: {} };
+      for (var name in inputs) {
+        var v = inputs[name].node.value.trim(), d = inputs[name].def;
+        if (v === "") { if (d.in === "path") return fail("Parameter " + name + " is required."); continue; }
+        if (d.type === "integer" || d.type === "number") { if (!/^\d{1,15}$/.test(v)) return fail(name + " must be a whole number."); v = Number(v); }
+        (d.in === "path" ? payload.params : payload.query)[name] = v;
+      }
+      if (bodyArea) { try { payload.body = JSON.parse(bodyArea.value); } catch (e) { return fail("Request body is not valid JSON."); } }
+      if (o.paid) {
+        if (!/^\d{1,15}$/.test(priceInput.value.trim())) return fail("Enter the expected price as whole millicents.");
+        if (!ack.checked) return fail("Tick the authorization box to run a paid operation.");
+        if (isClassify) {
+          if (!rates) return fail("Load current rates (" + o.quote + ") before classifying.");
+          payload.paidConsent = { acknowledged: true, expectedPricing: rates, maxChargeMillicents: Number(priceInput.value.trim()) };
+        } else payload.paidConsent = { acknowledged: true, expectedPriceMillicents: Number(priceInput.value.trim()) };
+      }
+      if (o.financial) { if (!confirmBox.checked) return fail("Confirm this action first."); payload.confirm = true; }
+      state.busy = true; runBtn.disabled = true; runBtn.textContent = "Running";
+      inspectorLoading();
+      api("/call", payload).then(function (r) {
+        if (r.status === 401 && cfg.login === "1") { showLogin(); return; }
+        if (r.data && r.data.quoteRecorded) state.quoted[o.id] = { price: r.data.quoteRecorded.priceMillicents, pricing: r.data.quoteRecorded.pricing || null };
+        if (o.paid) { ack.checked = false; delete state.quoted[o.quote]; }
+        renderResult(o, r);
+      }).catch(function () { renderResult(o, { status: 0, data: { error: { code: "NETWORK", message: "Network failure. Paid operations were not retried; check the account ledger or paid-result recovery before trying again." } } }); })
+        .then(function () { state.busy = false; runBtn.disabled = false; runBtn.textContent = o.paid ? "Run paid operation" : "Run"; });
+    });
+    function fail(m) { note.textContent = m; note.hidden = false; }
+    wrap.appendChild(el("div", { class: "actions" }, [runBtn]));
+    wrap.appendChild(note);
+    c.appendChild(wrap);
+  }
+
+  function inspectorLoading() {
+    var i = document.getElementById("inspector"); clear(i);
+    i.appendChild(el("div", { class: "eyebrow", text: "Result" }));
+    for (var n = 0; n < 6; n++) i.appendChild(el("div", { class: "skeleton", style: "margin:14px 0;width:" + (90 - n * 9) + "%" }));
+  }
+
+  function node(key, val, depth) {
+    var label = key === null ? [] : [el("span", { class: "k", text: JSON.stringify(String(key)) + ": " })];
+    if (val && typeof val === "object") {
+      var isArr = Array.isArray(val), keys = Object.keys(val);
+      var d = el("details", depth < 2 ? { open: "open" } : null, [el("summary", null, label.concat([el("span", { class: "nul", text: isArr ? "[" + keys.length + "]" : "{" + keys.length + "}" })]))]);
+      keys.slice(0, 500).forEach(function (k) { d.appendChild(node(isArr ? Number(k) : k, val[k], depth + 1)); });
+      return d;
+    }
+    var cls = typeof val === "string" ? "str" : typeof val === "number" ? "num" : typeof val === "boolean" ? "bool" : "nul";
+    var text = typeof val === "string" ? JSON.stringify(val.length > 4000 ? val.slice(0, 4000) + "..." : val) : String(val);
+    return el("div", { class: "leaf" }, label.concat([el("span", { class: cls, text: text })]));
+  }
+
+  function safeName(n, fallback) { n = String(n || fallback).replace(/[^A-Za-z0-9._-]+/g, "-").replace(/^[.-]+/, "").slice(0, 80); return n || fallback; }
+  function download(name, bytes, type) {
+    var url = URL.createObjectURL(new Blob([bytes], { type: type || "application/octet-stream" }));
+    var a = el("a", { href: url, download: name }); document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+  }
+  function b64(s) { var bin = atob(s), out = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i); return out; }
+
+  function renderResult(o, r) {
+    var i = document.getElementById("inspector"); clear(i);
+    var res = r.data || {};
+    var up = res.upstream || {};
+    var status = typeof up.status === "number" ? up.status : r.status;
+    var good = status >= 200 && status < 300;
+    i.appendChild(el("div", { class: "eyebrow", text: "Result  /  " + o.id }));
+    i.appendChild(el("div", { class: "status fade" }, [el("span", { class: "code " + (good ? "good" : "bad"), text: String(status || "ERR") }), el("span", { class: good ? "pill ok" : "pill paid", text: good ? "accepted" : "refused" })]));
+    var rl = up.rateLimit || {};
+    var kv = el("div", { class: "kv" });
+    [["limit", rl.limit], ["remaining", rl.remaining], ["reset", rl.reset], ["retry after", rl.retryAfter]].forEach(function (p) { if (p[1] != null) { kv.appendChild(el("span", { text: p[0] })); kv.appendChild(el("span", { text: String(p[1]) })); } });
+    if (kv.firstChild) i.appendChild(kv);
+    var data = up.data !== undefined ? up.data : res;
+    var intent = res.intent || (res.error && res.error.intent);
+    if (res.priceAlert) i.appendChild(el("div", { class: "notice err", text: "Charged " + res.priceAlert.chargedMillicents + " millicents, above the consented " + res.priceAlert.consentedMillicents + ". Review the ledger." }));
+    if (res.error && res.error.message) i.appendChild(el("div", { class: "notice err", text: res.error.code + ": " + res.error.message }));
+    if (intent) i.appendChild(intentCard(intent));
+    if (!good && o.paid && !intent) i.appendChild(el("div", { class: "notice", text: status === 409 ? "The server refused before debit. Request a fresh quote and consent again." : "This paid call was not retried. If the outcome is unclear, check the ledger or use paid-result recovery." }));
+    var acts = el("div", { class: "actions", style: "margin:0 0 12px" });
+    acts.appendChild(el("button", { class: "btn ghost", type: "button", text: "Download JSON", onclick: function () { download(safeName(o.id, "result") + ".json", JSON.stringify(data, null, 2), "application/json"); } }));
+    var html = data && typeof data === "object" ? (typeof data.html === "string" ? data.html : (data.result && typeof data.result.html === "string" ? data.result.html : null)) : null;
+    if (data && typeof data.archiveBase64 === "string") acts.appendChild(el("button", { class: "btn", type: "button", text: "Download archive", onclick: function () { try { download(safeName(data.filename, "export.zip"), b64(data.archiveBase64), "application/zip"); } catch (e) { alert("Archive is not valid base64."); } } }));
+    if (html) acts.appendChild(el("button", { class: "btn", type: "button", text: "Download HTML", onclick: function () { download(safeName(data.filename, "email") .replace(/(\.html)?$/, ".html"), html, "application/octet-stream"); } }));
+    if (data && typeof data.mjml === "string") acts.appendChild(el("button", { class: "btn ghost", type: "button", text: "Download MJML", onclick: function () { download(safeName(data.filename, "email").replace(/(\.mjml)?$/, ".mjml"), data.mjml, "application/octet-stream"); } }));
+    i.appendChild(acts);
+    var tree = el("div", { class: "tree fade" }); tree.appendChild(node(null, data, 0)); i.appendChild(tree);
+    if (html && html.length < 2200000) {
+      var f = el("iframe", { class: "preview", sandbox: "", referrerpolicy: "no-referrer", title: "Inert HTML preview" });
+      f.srcdoc = html; i.appendChild(el("div", { class: "eyebrow", style: "margin-top:16px", text: "Inert preview (scripts, forms and navigation disabled)" })); i.appendChild(f);
+    }
+  }
+
+  function intentCard(it) {
+    var card = el("div", { class: "intent fade" });
+    card.appendChild(el("h5", { text: "Paid intent  /  " + it.state }));
+    var kv = el("div", { class: "kv" });
+    [["operation", it.operationId], ["replay " + (it.replayField || "id"), it.replayId], ["attempts", it.attempts], ["http status", it.httpStatus], ["updated", it.updatedAt ? new Date(it.updatedAt * 1000).toISOString() : null], ["note", it.note]].forEach(function (p) {
+      if (p[1] != null && p[1] !== "") { kv.appendChild(el("span", { text: p[0] })); kv.appendChild(el("span", { text: String(p[1]) })); }
+    });
+    card.appendChild(kv);
+    if (it.state === "ambiguous") card.appendChild(el("p", { class: "hint", text: "The outcome is unknown. Check the credit ledger" + (it.replayField === "recoveryId" ? " or paid-result recovery with the replay id above" : "") + " before releasing. A released ambiguous intent keeps its replay id, so the upstream can deduplicate a resend." }));
+    if (it.state === "completed") card.appendChild(el("p", { class: "hint", text: "This exact request already completed. Releasing it allows a second, separate charge with a fresh replay id." }));
+    if (it.state === "ambiguous" || it.state === "completed" || it.state === "pending") {
+      var reason = el("textarea", { maxlength: "200", placeholder: "Reason (required, kept with the intent)" });
+      var ok = el("input", { type: "checkbox" });
+      var msg = el("div", { class: "notice err", hidden: "hidden" });
+      var btn = el("button", { class: "btn paid", type: "button", text: "Release intent", onclick: function () {
+        msg.hidden = true;
+        if (!ok.checked) { msg.textContent = "Tick the confirmation first."; msg.hidden = false; return; }
+        btn.disabled = true;
+        api("/call", { operationId: "sendrepute.releaseIntent", intentKey: it.key, reason: reason.value, confirm: true }).then(function (r) {
+          btn.disabled = false;
+          if (r.status !== 200) { msg.textContent = (r.data && r.data.error && r.data.error.message) || "Release refused."; msg.hidden = false; return; }
+          card.replaceWith(intentCard(r.data.intent));
+        }).catch(function () { btn.disabled = false; msg.textContent = "Network failure; nothing changed."; msg.hidden = false; });
+      } });
+      card.appendChild(reason);
+      card.appendChild(el("label", { class: "check" }, [ok, el("span", { text: "I reconciled this outcome and release it deliberately." })]));
+      card.appendChild(el("div", { class: "actions" }, [btn]));
+      card.appendChild(msg);
+    }
+    return card;
+  }
+
+  document.getElementById("intents-btn").addEventListener("click", function () {
+    inspectorLoading();
+    api("/call", { operationId: "sendrepute.listIntents" }).then(function (r) {
+      var i = document.getElementById("inspector"); clear(i);
+      i.appendChild(el("div", { class: "eyebrow", text: "Paid intents for this credential" }));
+      if (r.status !== 200) { i.appendChild(el("div", { class: "notice err", text: (r.data && r.data.error && r.data.error.message) || "Intent ledger unavailable." })); return; }
+      var list = r.data.intents || [];
+      if (!list.length) { i.appendChild(el("div", { class: "empty spaced" }, [el("h4", { text: "No open intents." }), el("p", { text: "Paid and billing calls are recorded here before they are sent, and stay until completed or released." })])); return; }
+      var box = el("div", { class: "intent-list" });
+      list.forEach(function (it) { box.appendChild(intentCard(it)); });
+      i.appendChild(box);
+    }).catch(function () { renderResult({ id: "intents" }, { status: 0, data: { error: { code: "NETWORK", message: "Network failure." } } }); });
+  });
+
+  boot();
+})();
+</script>
+</body>
+</html>

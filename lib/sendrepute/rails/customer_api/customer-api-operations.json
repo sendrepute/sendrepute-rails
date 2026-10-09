@@ -1,0 +1,1587 @@
+{
+  "source": "artifacts/api-server/src/customer-api-openapi.json",
+  "apiVersion": "0.1.0",
+  "count": 49,
+  "operations": [
+    {
+      "id": "customerQuoteCampaignInsights",
+      "method": "POST",
+      "path": "/v1/campaign-insights/quote",
+      "scope": "ai:generate",
+      "group": "Campaign insights",
+      "summary": "Quote one aggregate campaign insights analysis",
+      "hasBody": true,
+      "bodyFields": [],
+      "bodyRequired": [],
+      "bodyTemplate": {},
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerAnalyzeCampaignInsights",
+      "method": "POST",
+      "path": "/v1/campaign-insights/analyze",
+      "scope": "ai:generate",
+      "group": "Campaign insights",
+      "summary": "Analyze aggregate campaign delivery metrics with AI",
+      "hasBody": true,
+      "bodyFields": [
+        "analysisId",
+        "expectedPriceMillicents",
+        "consent",
+        "locale",
+        "metrics"
+      ],
+      "bodyRequired": [
+        "analysisId",
+        "expectedPriceMillicents",
+        "consent",
+        "metrics"
+      ],
+      "bodyTemplate": {
+        "analysisId": "",
+        "expectedPriceMillicents": 10000,
+        "consent": false,
+        "metrics": {},
+        "locale": "en"
+      },
+      "params": [],
+      "paid": true,
+      "quote": "customerQuoteCampaignInsights",
+      "priceField": "expectedPriceMillicents",
+      "consentFlag": "consent",
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "getCustomerApiModels",
+      "method": "GET",
+      "path": "/v1/models",
+      "scope": null,
+      "group": "Classification",
+      "summary": "List customer API classifier models",
+      "hasBody": false,
+      "bodyFields": [],
+      "bodyRequired": [],
+      "bodyTemplate": null,
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "getCustomerApiUsage",
+      "method": "GET",
+      "path": "/v1/usage",
+      "scope": null,
+      "group": "Classification",
+      "summary": "Get customer API usage and limits",
+      "hasBody": false,
+      "bodyFields": [],
+      "bodyRequired": [],
+      "bodyTemplate": null,
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "classifyCustomerEmail",
+      "method": "POST",
+      "path": "/v1/classify",
+      "scope": null,
+      "group": "Classification",
+      "summary": "Classify one customer email",
+      "hasBody": true,
+      "bodyFields": [
+        "sender",
+        "subject",
+        "body",
+        "displayedAlternatives",
+        "model",
+        "priceAuthorization"
+      ],
+      "bodyRequired": [
+        "sender",
+        "subject",
+        "body"
+      ],
+      "bodyTemplate": {
+        "sender": "",
+        "subject": "",
+        "body": "",
+        "model": "thor"
+      },
+      "params": [],
+      "paid": true,
+      "quote": "customerGetPricingSettings",
+      "priceField": "priceAuthorization.maxChargeMillicents",
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerGetAccount",
+      "method": "GET",
+      "path": "/v1/account",
+      "scope": "account:read",
+      "group": "Account",
+      "summary": "Get the current account and balance",
+      "hasBody": false,
+      "bodyFields": [],
+      "bodyRequired": [],
+      "bodyTemplate": null,
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerGetAccountReferrals",
+      "method": "GET",
+      "path": "/v1/account/referrals",
+      "scope": "account:read",
+      "group": "Account",
+      "summary": "Get the current account's referral link and reward activity",
+      "hasBody": false,
+      "bodyFields": [],
+      "bodyRequired": [],
+      "bodyTemplate": null,
+      "params": [
+        {
+          "name": "page",
+          "in": "query",
+          "required": false,
+          "type": "integer",
+          "minimum": 1,
+          "pattern": "^[A-Za-z0-9_.:-]{1,128}$",
+          "maxLength": 128
+        },
+        {
+          "name": "pageSize",
+          "in": "query",
+          "required": false,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "pattern": "^[A-Za-z0-9_.:-]{1,128}$",
+          "maxLength": 128
+        }
+      ],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerGetCreditLedger",
+      "method": "GET",
+      "path": "/v1/account/ledger",
+      "scope": "billing:read",
+      "group": "Account",
+      "summary": "List current account credit ledger",
+      "hasBody": false,
+      "bodyFields": [],
+      "bodyRequired": [],
+      "bodyTemplate": null,
+      "params": [
+        {
+          "name": "kind",
+          "in": "query",
+          "required": false,
+          "type": "string",
+          "enum": [
+            "usage",
+            "payments"
+          ],
+          "pattern": "^[A-Za-z0-9_.:-]{1,128}$",
+          "maxLength": 128
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "required": false,
+          "type": "number",
+          "minimum": 1,
+          "maximum": 50,
+          "pattern": "^[A-Za-z0-9_.:-]{1,128}$",
+          "maxLength": 128
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "required": false,
+          "type": "number",
+          "minimum": 0,
+          "pattern": "^[A-Za-z0-9_.:-]{1,128}$",
+          "maxLength": 128
+        }
+      ],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerListPaymentInvoices",
+      "method": "GET",
+      "path": "/v1/payments/invoices",
+      "scope": "billing:read",
+      "group": "Billing",
+      "summary": "List current account Bitcoin invoices",
+      "hasBody": false,
+      "bodyFields": [],
+      "bodyRequired": [],
+      "bodyTemplate": null,
+      "params": [
+        {
+          "name": "limit",
+          "in": "query",
+          "required": false,
+          "type": "number",
+          "minimum": 1,
+          "maximum": 50,
+          "pattern": "^[A-Za-z0-9_.:-]{1,128}$",
+          "maxLength": 128
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "required": false,
+          "type": "number",
+          "minimum": 0,
+          "pattern": "^[A-Za-z0-9_.:-]{1,128}$",
+          "maxLength": 128
+        }
+      ],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerCreatePaymentInvoice",
+      "method": "POST",
+      "path": "/v1/payments/invoices",
+      "scope": "billing:write",
+      "group": "Billing",
+      "summary": "Create a USD-denominated Bitcoin deposit invoice",
+      "hasBody": true,
+      "bodyFields": [
+        "amountCents",
+        "offerId",
+        "purpose",
+        "expectedPriceMillicents"
+      ],
+      "bodyRequired": [],
+      "bodyTemplate": {},
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": true,
+      "handoff": false,
+      "successStatus": [
+        201
+      ]
+    },
+    {
+      "id": "customerDeletePaymentInvoice",
+      "method": "DELETE",
+      "path": "/v1/payments/invoices/{invoiceId}",
+      "scope": "billing:write",
+      "group": "Billing",
+      "summary": "Hide an unpaid Bitcoin invoice",
+      "hasBody": false,
+      "bodyFields": [],
+      "bodyRequired": [],
+      "bodyTemplate": null,
+      "params": [
+        {
+          "name": "invoiceId",
+          "in": "path",
+          "required": true,
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.:-]{1,128}$",
+          "maxLength": 128
+        }
+      ],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": true,
+      "handoff": false,
+      "successStatus": [
+        204
+      ]
+    },
+    {
+      "id": "customerListPaymentMethods",
+      "method": "GET",
+      "path": "/v1/payments/methods",
+      "scope": "billing:read",
+      "group": "Billing",
+      "summary": "GET /payments/methods",
+      "hasBody": false,
+      "bodyFields": [],
+      "bodyRequired": [],
+      "bodyTemplate": null,
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerGetActiveDepositOffer",
+      "method": "GET",
+      "path": "/v1/payments/deposit-offer",
+      "scope": "billing:read",
+      "group": "Billing",
+      "summary": "Get the currently active Bitcoin deposit bonus offer",
+      "hasBody": false,
+      "bodyFields": [],
+      "bodyRequired": [],
+      "bodyTemplate": null,
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerRefreshMyPayments",
+      "method": "POST",
+      "path": "/v1/payments/refresh",
+      "scope": "billing:write",
+      "group": "Billing",
+      "summary": "Refresh confirmations for current account invoices",
+      "hasBody": false,
+      "bodyFields": [],
+      "bodyRequired": [],
+      "bodyTemplate": null,
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": true,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerGetPricingSettings",
+      "method": "GET",
+      "path": "/v1/pricing",
+      "scope": "catalog:read",
+      "group": "Billing",
+      "summary": "Get current public analysis and editing prices",
+      "hasBody": false,
+      "bodyFields": [],
+      "bodyRequired": [],
+      "bodyTemplate": null,
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerGetVipPlans",
+      "method": "GET",
+      "path": "/v1/vip/plans",
+      "scope": "catalog:read",
+      "group": "Membership",
+      "summary": "Get the current public VIP quote and comparison prices",
+      "hasBody": false,
+      "bodyFields": [],
+      "bodyRequired": [],
+      "bodyTemplate": null,
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerGetVip",
+      "method": "GET",
+      "path": "/v1/vip",
+      "scope": "vip:read",
+      "group": "Membership",
+      "summary": "GET /vip",
+      "hasBody": false,
+      "bodyFields": [],
+      "bodyRequired": [],
+      "bodyTemplate": null,
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerPurchaseVip",
+      "method": "POST",
+      "path": "/v1/vip/purchase",
+      "scope": "vip:purchase",
+      "group": "Membership",
+      "summary": "POST /vip/purchase",
+      "hasBody": true,
+      "bodyFields": [
+        "expectedPriceMillicents"
+      ],
+      "bodyRequired": [
+        "expectedPriceMillicents"
+      ],
+      "bodyTemplate": {
+        "expectedPriceMillicents": 1
+      },
+      "params": [],
+      "paid": true,
+      "quote": "customerGetVipPlans",
+      "priceField": "expectedPriceMillicents",
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerQuoteClassificationEdit",
+      "method": "POST",
+      "path": "/v1/rewrite/quote",
+      "scope": "rewrite",
+      "group": "Rewrite",
+      "summary": "Quote an edit and recheck against a saved classification",
+      "hasBody": true,
+      "bodyFields": [
+        "parentRequestId",
+        "editMode",
+        "terms"
+      ],
+      "bodyRequired": [
+        "parentRequestId",
+        "editMode",
+        "terms"
+      ],
+      "bodyTemplate": {
+        "parentRequestId": "",
+        "editMode": "manual",
+        "terms": []
+      },
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerQuoteManualClassificationEdit",
+      "method": "POST",
+      "path": "/v1/classify/edit/quote",
+      "scope": "classify",
+      "group": "Classification",
+      "summary": "Quote an edit and recheck against a saved classification",
+      "hasBody": true,
+      "bodyFields": [
+        "parentRequestId",
+        "editMode",
+        "terms"
+      ],
+      "bodyRequired": [
+        "parentRequestId",
+        "editMode",
+        "terms"
+      ],
+      "bodyTemplate": {
+        "parentRequestId": "",
+        "editMode": "manual",
+        "terms": []
+      },
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerClassifyEmail",
+      "method": "POST",
+      "path": "/v1/classify/edit",
+      "scope": "classify",
+      "group": "Classification",
+      "summary": "Classify an email using sender name, subject, and body",
+      "hasBody": true,
+      "bodyFields": [
+        "sender",
+        "subject",
+        "body",
+        "parentRequestId",
+        "editedTerms",
+        "editMode"
+      ],
+      "bodyRequired": [
+        "sender",
+        "subject",
+        "body",
+        "parentRequestId",
+        "editMode",
+        "editedTerms"
+      ],
+      "bodyTemplate": {
+        "sender": "",
+        "subject": "",
+        "body": "",
+        "parentRequestId": "",
+        "editMode": "manual",
+        "editedTerms": []
+      },
+      "params": [],
+      "paid": true,
+      "quote": "customerQuoteManualClassificationEdit",
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerRewriteFlaggedTermsWithAi",
+      "method": "POST",
+      "path": "/v1/rewrite",
+      "scope": "rewrite",
+      "group": "Rewrite",
+      "summary": "Rewrite selected flagged terms with AI and reclassify",
+      "hasBody": true,
+      "bodyFields": [
+        "parentRequestId",
+        "mode",
+        "terms",
+        "priceAuthorization"
+      ],
+      "bodyRequired": [
+        "parentRequestId",
+        "mode",
+        "terms"
+      ],
+      "bodyTemplate": {
+        "parentRequestId": "",
+        "mode": "single",
+        "terms": []
+      },
+      "params": [],
+      "paid": true,
+      "quote": "customerQuoteAiRewrite",
+      "priceField": "priceAuthorization.maximumChargeMillicents",
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerFinalizeAiRewrite",
+      "method": "POST",
+      "path": "/v1/rewrite/finalize",
+      "scope": "rewrite",
+      "group": "Rewrite",
+      "summary": "Confirm exactly one rendered final draft against an owned paid Rewrite All receipt without another debit",
+      "hasBody": true,
+      "bodyFields": [
+        "requestId",
+        "sender",
+        "subject",
+        "body"
+      ],
+      "bodyRequired": [
+        "requestId",
+        "sender",
+        "subject",
+        "body"
+      ],
+      "bodyTemplate": {
+        "requestId": "",
+        "sender": "",
+        "subject": "",
+        "body": ""
+      },
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerGetAiRewriteResult",
+      "method": "GET",
+      "path": "/v1/rewrite/result/{requestId}",
+      "scope": "rewrite",
+      "group": "Rewrite",
+      "summary": "Recover an owned completed paid AI rewrite by its original receipt",
+      "hasBody": false,
+      "bodyFields": [],
+      "bodyRequired": [],
+      "bodyTemplate": null,
+      "params": [
+        {
+          "name": "requestId",
+          "in": "path",
+          "required": true,
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]+$",
+          "maxLength": 128
+        }
+      ],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerQuoteAiRewrite",
+      "method": "POST",
+      "path": "/v1/rewrite/ai-quote",
+      "scope": "rewrite",
+      "group": "Rewrite",
+      "summary": "Quote the maximum authorized charge for an AI rewrite",
+      "hasBody": true,
+      "bodyFields": [
+        "parentRequestId",
+        "mode",
+        "terms"
+      ],
+      "bodyRequired": [
+        "parentRequestId",
+        "mode",
+        "terms"
+      ],
+      "bodyTemplate": {
+        "parentRequestId": "",
+        "mode": "single",
+        "terms": []
+      },
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerCreateAiEmailTemplate",
+      "method": "POST",
+      "path": "/v1/email-builder/ai-template",
+      "scope": "ai:generate",
+      "group": "Standard builder",
+      "summary": "Generate an editable email template with AI and charge the account price after validation",
+      "hasBody": true,
+      "bodyFields": [
+        "expectedPriceMillicents",
+        "content",
+        "category",
+        "subtype",
+        "recoveryId"
+      ],
+      "bodyRequired": [],
+      "bodyTemplate": {},
+      "params": [],
+      "paid": true,
+      "quote": "customerGetPricingSettings",
+      "priceField": "expectedPriceMillicents",
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerCreateVipEmailTemplate",
+      "method": "POST",
+      "path": "/v1/vip/email-template",
+      "scope": "ai:generate",
+      "group": "VIP builder",
+      "summary": "POST /vip/email-template",
+      "hasBody": true,
+      "bodyFields": [
+        "prompt",
+        "expectedPriceMillicents",
+        "imageUrls",
+        "recoveryId"
+      ],
+      "bodyRequired": [
+        "prompt",
+        "expectedPriceMillicents"
+      ],
+      "bodyTemplate": {
+        "prompt": "",
+        "expectedPriceMillicents": 0
+      },
+      "params": [],
+      "paid": true,
+      "quote": "customerGetPricingSettings",
+      "priceField": "expectedPriceMillicents",
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerAccessEmailBuilder",
+      "method": "POST",
+      "path": "/v1/email-builder/access",
+      "scope": "builder:write",
+      "group": "Standard builder",
+      "summary": "Open a standard email design editor session for free",
+      "hasBody": true,
+      "bodyFields": [
+        "designId",
+        "sourceKind",
+        "templateId"
+      ],
+      "bodyRequired": [
+        "designId",
+        "sourceKind"
+      ],
+      "bodyTemplate": {
+        "designId": "",
+        "sourceKind": "curated"
+      },
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerGetEmailBuilderAccess",
+      "method": "GET",
+      "path": "/v1/email-builder/access/{accessId}",
+      "scope": "builder:read",
+      "group": "Standard builder",
+      "summary": "GET /email-builder/access/{accessId}",
+      "hasBody": false,
+      "bodyFields": [],
+      "bodyRequired": [],
+      "bodyTemplate": null,
+      "params": [
+        {
+          "name": "accessId",
+          "in": "path",
+          "required": true,
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.:-]{1,128}$",
+          "maxLength": 128
+        },
+        {
+          "name": "designId",
+          "in": "query",
+          "required": false,
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.:-]{1,128}$",
+          "maxLength": 128
+        }
+      ],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerCloseEmailBuilderAccess",
+      "method": "DELETE",
+      "path": "/v1/email-builder/access/{accessId}",
+      "scope": "builder:write",
+      "group": "Standard builder",
+      "summary": "DELETE /email-builder/access/{accessId}",
+      "hasBody": false,
+      "bodyFields": [],
+      "bodyRequired": [],
+      "bodyTemplate": null,
+      "params": [
+        {
+          "name": "accessId",
+          "in": "path",
+          "required": true,
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.:-]{1,128}$",
+          "maxLength": 128
+        }
+      ],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        204
+      ]
+    },
+    {
+      "id": "customerCreateVipEmailBuilderAccess",
+      "method": "POST",
+      "path": "/v1/vip/email-builder/access",
+      "scope": "vip:builder",
+      "group": "VIP builder",
+      "summary": "POST /vip/email-builder/access",
+      "hasBody": true,
+      "bodyFields": [
+        "designId",
+        "sourceKind",
+        "templateId",
+        "expectedPriceMillicents",
+        "recoveryId"
+      ],
+      "bodyRequired": [
+        "designId",
+        "sourceKind",
+        "expectedPriceMillicents"
+      ],
+      "bodyTemplate": {
+        "designId": "",
+        "sourceKind": "template",
+        "expectedPriceMillicents": 0
+      },
+      "params": [],
+      "paid": true,
+      "quote": "customerGetPricingSettings",
+      "priceField": "expectedPriceMillicents",
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        201
+      ]
+    },
+    {
+      "id": "customerGetVipEmailBuilderAccess",
+      "method": "GET",
+      "path": "/v1/vip/email-builder/access/{accessId}",
+      "scope": "builder:read",
+      "group": "VIP builder",
+      "summary": "GET /vip/email-builder/access/{accessId}",
+      "hasBody": false,
+      "bodyFields": [],
+      "bodyRequired": [],
+      "bodyTemplate": null,
+      "params": [
+        {
+          "name": "accessId",
+          "in": "path",
+          "required": true,
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.:-]{1,128}$",
+          "maxLength": 128
+        }
+      ],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerDeleteVipEmailBuilderAccess",
+      "method": "DELETE",
+      "path": "/v1/vip/email-builder/access/{accessId}",
+      "scope": "vip:builder",
+      "group": "VIP builder",
+      "summary": "DELETE /vip/email-builder/access/{accessId}",
+      "hasBody": false,
+      "bodyFields": [],
+      "bodyRequired": [],
+      "bodyTemplate": null,
+      "params": [
+        {
+          "name": "accessId",
+          "in": "path",
+          "required": true,
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.:-]{1,128}$",
+          "maxLength": 128
+        }
+      ],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        204
+      ]
+    },
+    {
+      "id": "customerGetPaidResult",
+      "method": "GET",
+      "path": "/customer/paid-results/{recoveryId}",
+      "scope": null,
+      "group": "Paid-result recovery",
+      "summary": "customerGetPaidResult",
+      "hasBody": false,
+      "bodyFields": [],
+      "bodyRequired": [],
+      "bodyTemplate": null,
+      "params": [
+        {
+          "name": "recoveryId",
+          "in": "path",
+          "required": true,
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+          "maxLength": 128
+        }
+      ],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerPaidResultIdentity",
+      "method": "GET",
+      "path": "/customer/paid-results/identity",
+      "scope": null,
+      "group": "Paid-result recovery",
+      "summary": "customerPaidResultIdentity",
+      "hasBody": false,
+      "bodyFields": [],
+      "bodyRequired": [],
+      "bodyTemplate": null,
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerResolvePaidResult",
+      "method": "POST",
+      "path": "/customer/paid-results/{recoveryId}/resolve",
+      "scope": null,
+      "group": "Paid-result recovery",
+      "summary": "customerResolvePaidResult",
+      "hasBody": true,
+      "bodyFields": [
+        "action",
+        "reason"
+      ],
+      "bodyRequired": [
+        "action",
+        "reason"
+      ],
+      "bodyTemplate": {
+        "action": "resolve",
+        "reason": ""
+      },
+      "params": [
+        {
+          "name": "recoveryId",
+          "in": "path",
+          "required": true,
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+          "maxLength": 128
+        }
+      ],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": true,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerStandardBuilderImport",
+      "method": "POST",
+      "path": "/v1/email-builder/import",
+      "scope": "builder:write",
+      "group": "Standard builder",
+      "summary": "Standard Builder Import",
+      "hasBody": true,
+      "bodyFields": [
+        "mjml",
+        "filename",
+        "format"
+      ],
+      "bodyRequired": [
+        "mjml"
+      ],
+      "bodyTemplate": {
+        "mjml": "",
+        "filename": "",
+        "format": "html"
+      },
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerStandardBuilderValidate",
+      "method": "POST",
+      "path": "/v1/email-builder/validate",
+      "scope": "builder:write",
+      "group": "Standard builder",
+      "summary": "Standard Builder Validate",
+      "hasBody": true,
+      "bodyFields": [
+        "mjml",
+        "filename",
+        "format"
+      ],
+      "bodyRequired": [
+        "mjml"
+      ],
+      "bodyTemplate": {
+        "mjml": "",
+        "filename": "",
+        "format": "html"
+      },
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerStandardBuilderCompile",
+      "method": "POST",
+      "path": "/v1/email-builder/compile",
+      "scope": "builder:write",
+      "group": "Standard builder",
+      "summary": "Standard Builder Compile",
+      "hasBody": true,
+      "bodyFields": [
+        "mjml",
+        "filename",
+        "format"
+      ],
+      "bodyRequired": [
+        "mjml"
+      ],
+      "bodyTemplate": {
+        "mjml": "",
+        "filename": "",
+        "format": "html"
+      },
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerStandardBuilderExport",
+      "method": "POST",
+      "path": "/v1/email-builder/export",
+      "scope": "builder:write",
+      "group": "Standard builder",
+      "summary": "Standard Builder Export",
+      "hasBody": true,
+      "bodyFields": [
+        "mjml",
+        "filename",
+        "format"
+      ],
+      "bodyRequired": [
+        "mjml"
+      ],
+      "bodyTemplate": {
+        "mjml": "",
+        "filename": "",
+        "format": "html"
+      },
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerNativeBuilderImport",
+      "method": "POST",
+      "path": "/v1/vip/email-builder/import",
+      "scope": "vip:builder",
+      "group": "VIP builder",
+      "summary": "Native Builder Import",
+      "hasBody": true,
+      "bodyFields": [
+        "document",
+        "accessId",
+        "options",
+        "filename",
+        "format"
+      ],
+      "bodyRequired": [
+        "document",
+        "accessId"
+      ],
+      "bodyTemplate": {
+        "document": {
+          "version": 0,
+          "title": "",
+          "preheader": "",
+          "lang": "",
+          "direction": "ltr",
+          "width": 280,
+          "background": "",
+          "foreground": "",
+          "fontFamily": "",
+          "rows": []
+        },
+        "accessId": "",
+        "filename": "",
+        "format": "html"
+      },
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerNativeBuilderValidate",
+      "method": "POST",
+      "path": "/v1/vip/email-builder/validate",
+      "scope": "vip:builder",
+      "group": "VIP builder",
+      "summary": "Native Builder Validate",
+      "hasBody": true,
+      "bodyFields": [
+        "document",
+        "accessId",
+        "options",
+        "filename",
+        "format"
+      ],
+      "bodyRequired": [
+        "document",
+        "accessId"
+      ],
+      "bodyTemplate": {
+        "document": {
+          "version": 0,
+          "title": "",
+          "preheader": "",
+          "lang": "",
+          "direction": "ltr",
+          "width": 280,
+          "background": "",
+          "foreground": "",
+          "fontFamily": "",
+          "rows": []
+        },
+        "accessId": "",
+        "filename": "",
+        "format": "html"
+      },
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerNativeBuilderCompile",
+      "method": "POST",
+      "path": "/v1/vip/email-builder/compile",
+      "scope": "vip:builder",
+      "group": "VIP builder",
+      "summary": "Native Builder Compile",
+      "hasBody": true,
+      "bodyFields": [
+        "document",
+        "accessId",
+        "options",
+        "filename",
+        "format"
+      ],
+      "bodyRequired": [
+        "document",
+        "accessId"
+      ],
+      "bodyTemplate": {
+        "document": {
+          "version": 0,
+          "title": "",
+          "preheader": "",
+          "lang": "",
+          "direction": "ltr",
+          "width": 280,
+          "background": "",
+          "foreground": "",
+          "fontFamily": "",
+          "rows": []
+        },
+        "accessId": "",
+        "filename": "",
+        "format": "html"
+      },
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerNativeBuilderExport",
+      "method": "POST",
+      "path": "/v1/vip/email-builder/export",
+      "scope": "vip:builder",
+      "group": "VIP builder",
+      "summary": "Native Builder Export",
+      "hasBody": true,
+      "bodyFields": [
+        "document",
+        "accessId",
+        "options",
+        "filename",
+        "format"
+      ],
+      "bodyRequired": [
+        "document",
+        "accessId"
+      ],
+      "bodyTemplate": {
+        "document": {
+          "version": 0,
+          "title": "",
+          "preheader": "",
+          "lang": "",
+          "direction": "ltr",
+          "width": 280,
+          "background": "",
+          "foreground": "",
+          "fontFamily": "",
+          "rows": []
+        },
+        "accessId": "",
+        "filename": "",
+        "format": "html"
+      },
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerCreateHostedBuilderHandoff",
+      "method": "POST",
+      "path": "/v1/email-builder/hosted-handoffs",
+      "scope": "builder:write",
+      "group": "Standard builder",
+      "summary": "Create hosted standard builder handoff",
+      "hasBody": true,
+      "bodyFields": [
+        "state",
+        "returnOrigin",
+        "initialMjml",
+        "mode",
+        "vipAccessId",
+        "initialDocument"
+      ],
+      "bodyRequired": [
+        "state",
+        "returnOrigin"
+      ],
+      "bodyTemplate": {
+        "state": "",
+        "returnOrigin": ""
+      },
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": true,
+      "successStatus": [
+        201
+      ]
+    },
+    {
+      "id": "customerListVipBuilderTemplates",
+      "method": "GET",
+      "path": "/v1/vip/email-builder/templates",
+      "scope": "vip:read",
+      "group": "Template catalog",
+      "summary": "List Vip Builder Templates",
+      "hasBody": false,
+      "bodyFields": [],
+      "bodyRequired": [],
+      "bodyTemplate": null,
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerGetVipBuilderTemplate",
+      "method": "GET",
+      "path": "/v1/vip/email-builder/templates/{templateId}",
+      "scope": "vip:read",
+      "group": "Template catalog",
+      "summary": "Get Vip Builder Template",
+      "hasBody": false,
+      "bodyFields": [],
+      "bodyRequired": [],
+      "bodyTemplate": null,
+      "params": [
+        {
+          "name": "templateId",
+          "in": "path",
+          "required": true,
+          "type": "string",
+          "pattern": "^vip-(0[1-9]|1[0-9]|20)$",
+          "maxLength": 128
+        }
+      ],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerListStandardBuilderTemplates",
+      "method": "GET",
+      "path": "/v1/email-builder/templates",
+      "scope": "catalog:read",
+      "group": "Template catalog",
+      "summary": "List Standard Builder Templates",
+      "hasBody": false,
+      "bodyFields": [],
+      "bodyRequired": [],
+      "bodyTemplate": null,
+      "params": [],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    },
+    {
+      "id": "customerGetStandardBuilderTemplate",
+      "method": "GET",
+      "path": "/v1/email-builder/templates/{templateId}",
+      "scope": "catalog:read",
+      "group": "Template catalog",
+      "summary": "Get Standard Builder Template",
+      "hasBody": false,
+      "bodyFields": [],
+      "bodyRequired": [],
+      "bodyTemplate": null,
+      "params": [
+        {
+          "name": "templateId",
+          "in": "path",
+          "required": true,
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]+$",
+          "maxLength": 128
+        }
+      ],
+      "paid": false,
+      "quote": null,
+      "priceField": null,
+      "consentFlag": null,
+      "financial": false,
+      "handoff": false,
+      "successStatus": [
+        200
+      ]
+    }
+  ]
+}

@@ -6,6 +6,7 @@ require_relative "rails/configuration"
 require_relative "rails/client"
 require_relative "rails/message"
 require_relative "rails/mailer"
+require_relative "rails/customer_api"
 
 module SendRepute
   module Rails
