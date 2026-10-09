@@ -1,0 +1,20 @@
+{
+  "integration": "rails",
+  "files": [
+    "artifacts/spam-signal/public/integration-previews/rails.webp",
+    "integrations/rails/docs/screenshots/dashboard.webp"
+  ],
+  "sha256": "b139217e4fe368d9ab43b2c72c9baba77575015cc84369a5caf7bac79c537946",
+  "capture": {
+    "method": "Real Chromium screenshot via playwright-core 1.62.1",
+    "viewport": "1440x1000 (CSS px)",
+    "date": "2026-10-09",
+    "state": "Initial signed-in overview after page load; no operation selected or executed"
+  },
+  "host": "ActionPack 7.1.6 host, NOT a full Rails application: railties is not in the integrations/rails bundle. Real ActionDispatch::Routing::RouteSet drawing shipped SendRepute::Rails::CustomerConsole.draw(path: \"admin/sendrepute\"), real shipped CustomerConsoleController < ActionController::Base, ActionDispatch cookies + CacheStore session; authorize proc grants 127.0.0.1. No Rack server gem installed, so requests are passed to the Rack app by a small stdlib TCPServer adapter in /tmp/sr-shots/rhost/host.rb.",
+  "url_path": "/admin/sendrepute",
+  "bound": "127.0.0.1 only, temporary /tmp server, stopped after capture",
+  "demo_data_boundary": "Synthetic local account only (fixture account acct_fixture / operator@fixture.invalid). Upstream SendRepute API replaced by an in-process fixture transport; no network, live API, or paid calls. Random disposable fixture API key held server-side and never rendered; operator token (Node hosts) entered into a masked field and not visible. Throwaway 0700 intent ledger in /tmp. No project or production database used.",
+  "operation_count_note": "Framework hosts show 48 of 49 operations because no handoff_return_origin was configured, so the hosted builder handoff is disabled by the shipped code.",
+  "caption": "SendRepute customer console from the rails integration, running locally with a synthetic sample account and fixture transport. Not a live account."
+}

@@ -1,5 +1,11 @@
 # SendRepute Rails adapter
 
+## Control panel preview
+
+![SendRepute Rails console](https://raw.githubusercontent.com/sendrepute/sendrepute-rails/main/docs/screenshots/dashboard.webp)
+
+The shipped controller mounted in a local ActionPack host with sample data, not a complete Rails application. See `docs/screenshots/dashboard.provenance.json` for capture details.
+
 Version 0.1.0 is a small Action Mailer pre-delivery adapter for Rails 7.1+.
 Classification is paid, advisory by default, never sends mail itself, and does
 not guarantee inbox placement. This gem has not been published to RubyGems.
